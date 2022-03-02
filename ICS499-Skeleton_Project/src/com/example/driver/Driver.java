@@ -21,13 +21,33 @@ import com.example.wordReader.wordReader;
 public class Driver {
 
 	public static void main(String[] args) {
+
+		/**
+		 * These variables represent the settings for the board. wordMax set the
+		 * maximum number of words on the board and language sets the language of the
+		 * words between english and telugu.
+		 */
+		int wordMax = 3;
+		String language = "english";
+
+		/**
+		 * wordList will contain the words that the reader object has read. logicalChars
+		 * holds the Letter objects of each word
+		 */
 		ArrayList<String> wordList = new ArrayList<String>();
 		ArrayList<Letter> logicalChars = new ArrayList<Letter>();
-		wordReader reader = new wordReader("E:\\Folders\\Classes\\ICS499\\Files\\english_word_list.csv");
+
+		/**
+		 * wordReader object reads the words contained in the word_list and adds it to
+		 * the arrayList wordList
+		 */
+		wordReader reader = new wordReader("E:\\Folders\\Classes\\ICS499\\Files\\" + language + "_word_list.csv");
 		reader.readFileIntoArray(wordList);
 
+		/**
+		 * board represents the skeleton board that will be played on.
+		 */
 		SkeletonBoard board = new SkeletonBoard();
-		board.getWords(wordList);
 
 //		Collections.sort(board.getWordList());
 		board.findBoardSize();
@@ -35,9 +55,8 @@ public class Driver {
 
 		Powerpoint ppt = new Powerpoint();
 		int slideCount = 0;
-
-		for (int i = 0; i < board.getWordList().size(); i++) {
-			APIConnector connector = new APIConnector(board.getWordList().get(i));
+		for (int i = 0; i < wordList.size(); i++) {
+			APIConnector connector = new APIConnector(wordList.get(i));
 			connector.getLogicalChars();
 			try {
 				int responseCode = connector.getConnection().getResponseCode();
@@ -57,37 +76,57 @@ public class Driver {
 
 					logicalChars = new ArrayList<Letter>();
 
-					Word word = new Word(board.getWordList().get(i), logicalChars, -1, -1, "none");
+					Word word = new Word(wordList.get(i), logicalChars, -1, -1, "none");
 					for (int k = 0; k < jsonArray.length(); k++) {
 						Letter letter = new Letter(-1, -1, jsonArray.getString(k), word, false);
 						logicalChars.add(letter);
 					}
 
 					board.insertToBoard(logicalChars, word);
-
-					for (int j = 0; j < board.getBoard().length; j++) {
-						for (int l = 0; l < board.getBoard().length; l++) {
-							System.out.print("[" + board.getBoard()[j][l].getLetter() + "]");
-						}
-						System.out.println();
+					if(board.getNumberOfWords() == wordMax) {
+						HSLFSlide slide = ppt.createSlide(++slideCount);
+						ppt.createTable(slide, board.getBoard().length, board.getBoard().length, board.getBoard());
+						ppt.createAvailableLetters(slide, board);
+						ppt.writeToFile(ppt.getPpt(), language + "_skeleton_puzzle");
+						ppt.getPpt().close();
+						printBoard(board);
+						board = new SkeletonBoard();
+						board.findBoardSize();
+						board.fillBoardWithSpaces();
 					}
-					System.out.println();
+					
+					
 
 				}
 				connector.disconnect(connector.getConnection());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
 		}
 
-		HSLFSlide slide = ppt.createSlide(++slideCount);
-		ppt.createTable(slide, board.getBoard().length, board.getBoard().length, board.getBoard());
-		ppt.createAvailableLetters(slide, board);
-		ppt.writeToFile(ppt.getPpt(), "english_skeleton_puzzle");
+//		HSLFSlide slide = ppt.createSlide(++slideCount);
+//		ppt.createTable(slide, board.getBoard().length, board.getBoard().length, board.getBoard());
+//		ppt.createAvailableLetters(slide, board);
+//		ppt.writeToFile(ppt.getPpt(), language + "_skeleton_puzzle");
 		/**
 		 * sheesh elope enter
 		 */
 
+	}
+	
+	
+	/**
+	 * Print the board for testing.
+	 */
+	public static void printBoard(SkeletonBoard board) {
+		for (int j = 0; j < board.getBoard().length; j++) {
+			for (int l = 0; l < board.getBoard().length; l++) {
+				System.out.print("[" + board.getBoard()[j][l].getLetter() + "]");
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 
 }
