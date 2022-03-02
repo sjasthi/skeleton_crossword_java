@@ -83,7 +83,6 @@ public class Driver {
 					}
 
 					board.insertToBoard(logicalChars, word);
-					System.out.println(board.getNumberOfWords());
 					if(board.getNumberOfWords() == wordMax) {
 						HSLFSlide slide = ppt.createSlide(++slideCount);
 						ppt.createTable(slide, board.getBoard().length, board.getBoard().length, board.getBoard());

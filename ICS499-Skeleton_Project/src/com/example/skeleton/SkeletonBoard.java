@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.example.driver.Driver;
+
 public class SkeletonBoard {
 	private ArrayList<String> wordList;
 	private Letter[][] board;
@@ -68,11 +70,10 @@ public class SkeletonBoard {
 				Letter match = findMatch(logicalChars, word);
 				int matchedIndex = findIndexMatching(match, logicalChars);
 				String direction = findDirection(match);
-				System.out.println(direction);
-				System.out.println(match.getRow() + "," + match.getColumn());
+				System.out.println("Direction:" +direction);
 
 				if (isValid(logicalChars, word, match, direction, matchedIndex)) {
-					System.out.println(word.getWord() + ":true");
+					System.out.println(word.getWord() + "-> : true");
 
 					if (direction.equalsIgnoreCase("Vertical")) {
 						for (int k = 0; k < logicalChars.size(); k++) {
@@ -124,7 +125,7 @@ public class SkeletonBoard {
 //					}
 
 				} else {
-					System.out.println(word.getWord() + ":false");
+					System.out.println(word.getWord() + "-> : false");
 				}
 
 			}
@@ -157,25 +158,25 @@ public class SkeletonBoard {
 										.equals(" ")
 										|| !board[matched.getRow() - matchedIndex + i][matched.getColumn() + 1]
 												.getLetter().equals(" "))) {
-									System.out.println(1);
+									System.out.println("Condition: 1");
 									return false;
 								} else if ((board[matched.getRow() - matchedIndex + i][matched.getColumn() - 1]
 										.getLetter().equals(" ")
 										&& board[matched.getRow() - matchedIndex + i][matched.getColumn() + 1]
 												.getLetter().equals(" "))) {
-									System.out.println(1);
+									System.out.println("Condition: 1");
 									return true;
 								}
 							} else if (matched.getColumn() - 1 < 0) {
 								if (board[matched.getRow() - matchedIndex + i][matched.getColumn() + 1].getLetter()
 										.equals(" ")) {
-									System.out.println(2);
+									System.out.println("Condition: 2");
 									return true;
 								}
 							} else if (matched.getColumn() + 1 > board.length - 1) {
 								if ((board[matched.getRow() - matchedIndex + i][matched.getColumn() - 1].getLetter()
 										.equals(" "))) {
-									System.out.println(3);
+									System.out.println("Condition: 3");
 									return true;
 								}
 							}
@@ -193,25 +194,25 @@ public class SkeletonBoard {
 										.equals(" ")
 										|| !board[matched.getRow() - matchedIndex + i][matched.getColumn() + 1]
 												.getLetter().equals(" "))) {
-									System.out.println(4);
+									System.out.println("Condition: 4");
 									return false;
 								} else if ((board[matched.getRow() - matchedIndex + i][matched.getColumn() - 1]
 										.getLetter().equals(" ")
 										&& board[matched.getRow() - matchedIndex + i][matched.getColumn() + 1]
 												.getLetter().equals(" "))) {
-									System.out.println(4);
+									System.out.println("Condition: 4");
 									return true;
 								}
 							} else if (matched.getColumn() - 1 < 0) {
 								if (board[matched.getRow() - matchedIndex + i][matched.getColumn() + 1].getLetter()
 										.equals(" ")) {
-									System.out.println(5);
+									System.out.println("Condition: 5");
 									return true;
 								}
 							} else if (matched.getColumn() + 1 > board.length - 1) {
 								if ((board[matched.getRow() - matchedIndex + i][matched.getColumn() - 1].getLetter()
 										.equals(" "))) {
-									System.out.println(6);
+									System.out.println("Condition: 6");
 									return true;
 								}
 							}
@@ -234,24 +235,24 @@ public class SkeletonBoard {
 										.equals(" ")
 										|| !board[matched.getRow() + 1][matched.getColumn() - matchedIndex + i]
 												.getLetter().equals(" "))) {
-									System.out.println(7);
+									System.out.println("Condition: 7");
 									return false;
 								} else if ((board[matched.getRow() - 1][matched.getColumn() - matchedIndex + i]
 										.getLetter().equals(" ")
 										&& board[matched.getRow() + 1][matched.getColumn() - matchedIndex + i]
 												.getLetter().equals(" "))) {
-									System.out.println(7);
+									System.out.println("Condition: 7");
 									return true;
 								}
 							} else if (matched.getRow() - 1 < 0) {
 								if (board[matched.getRow() + 1][matched.getColumn() - matchedIndex + i].getLetter()
 										.equals(" ")) {
-									System.out.println(8);
+									System.out.println("Condition: 8");
 									return true;
 								} else if (matched.getRow() + 1 > board.length - 1) {
 									if ((board[matched.getRow() - 1][matched.getColumn() - matchedIndex + i].getLetter()
 											.equals(" "))) {
-										System.out.println(9);
+										System.out.println("Condition: 9");
 										return true;
 									}
 								}
@@ -266,24 +267,30 @@ public class SkeletonBoard {
 							continue;
 						} else {
 							if ((matched.getRow() - 1 >= 0) && (matched.getRow() + 1 <= board.length - 1)) {
-								if (board[matched.getRow() - 1][matched.getColumn() - matchedIndex + i].getLetter()
+								if (!(board[matched.getRow() - 1][matched.getColumn() - matchedIndex + i].getLetter()
 										.equals(" ")
+										|| !board[matched.getRow() + 1][matched.getColumn() - matchedIndex + i]
+												.getLetter().equals(" "))) {
+									System.out.println("Condition: 10");
+									return false;
+								} else if ((board[matched.getRow() - 1][matched.getColumn() - matchedIndex + i]
+										.getLetter().equals(" ")
 										&& board[matched.getRow() + 1][matched.getColumn() - matchedIndex + i]
-												.getLetter().equals(" ")) {
-									System.out.println(10);
+												.getLetter().equals(" "))) {
+									System.out.println("Condition: 10");
 									return true;
 								}
 							} else if (matched.getRow() - 1 < 0) {
 								if (matched.getRow() - 1 < 0) {
 									if (board[matched.getRow() + 1][matched.getColumn() - matchedIndex + i].getLetter()
 											.equals(" ")) {
-										System.out.println(11);
+										System.out.println("Condition: 11");
 										return true;
 									}
 								} else if (matched.getRow() + 1 > board.length - 1) {
 									if ((board[matched.getRow() - 1][matched.getColumn() - matchedIndex + i].getLetter()
 											.equals(" "))) {
-										System.out.println(12);
+										System.out.println("Condition: 12");
 										return true;
 									}
 								}
